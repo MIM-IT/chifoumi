@@ -1,55 +1,68 @@
 package chifoumi;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+
+
+
 
 public class Chifoumi {
 
 
 
 	public static void main(String[] args) {
+		List<String> moves = new ArrayList<String>();
+		
 		Scanner sc = new Scanner(System.in);
-
+		boolean end = false; //Lorsque true 'end' le jeu est finis 
 		System.out.println("Combien de tour  ?");
 		String tour = sc.next();
 		System.out.println("Vous allez jouer " + tour + " tour(s).");
 
 		String version = "";
-
-		while( !(version.equalsIgnoreCase("1") || version.equalsIgnoreCase("2"))) {
+		while( !end ) {
 			System.out.println("Deux versions {classique/spock}. 1 ou 2 ?");
+			System.out.println("Tapez end pour quitter : ");
 			version = sc.next();
-
-			if(  !(version.equalsIgnoreCase("1") || version.equalsIgnoreCase("2")) ) {
-				// Si version n'est pas égal à 1 ou 2
+			
+			switch(version) {
+			case "1":
+				System.out.println("allez jeu 1");
+				break;
+			case "2":
+				jeu(sc,Integer.parseInt(tour),moves);
+				break;
+				
+			case "end":
+				end = true;
+				break;
+			default:
 				System.out.println("Ce n'est pas bon re essayez !");
+				break;
+				
 			}
+			
 		}
-		jeu(sc,Integer.parseInt(tour));
+	
 	}
 
-	public static void jeu(Scanner sc, int tour) {
-		HashMap <String,String> attaque = new HashMap< String, String >();
-
-		attaque.put("L","S P");
-		attaque.put("S","Sc P");
-		attaque.put("Sc","L P");
-		attaque.put("P","R L");
-		attaque.put("R","Sc L");
-
-		String[] moves = {"L","S","Sc","P","R"};
+	public static void jeu(Scanner sc, int tour,List<String> moves) {
 		
-		/*on fait jouer le robot grace à la selection aléatoire d'un de mes 5 élèments
-		 du tablleau de string moves[], qu'il faudra caster en int. La méthode random renvoie un 
-		 random entre [0,1] donc on multiplie pas ranbge of index 4.
-		 */
+		moves = Arrays.asList("rock","scissors","lizard","paper","spock");
 		int score_joueur = 0;
 		int score_robot = 0; 
 
 		for (int i = 0; i < tour; i++) {
 			System.out.println("Quelle attaque ?");
 			String joueur  = sc.next();
-			String robot = moves[(int)(4 * Math.random())];
-			if( attaque.get(joueur).contains(robot)) {
+			
+			int index_player_gesture = moves.indexOf(joueur);
+			int index_robot_gesture = (int)(4 * Math.random());
+			
+			String robot = moves.get(index_robot_gesture);
+			System.out.println(robot);
+			if(robot.equals(moves.get((index_player_gesture + 2) % 5)) || robot.equals(moves.get((index_player_gesture +1 ) % 5)) ) {
 				System.out.println("Vous avez gagné la manche");
 				score_joueur ++;
 
